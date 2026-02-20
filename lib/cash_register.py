@@ -14,7 +14,7 @@ class CashRegister:
 
   @discount.setter # Setter method
   def discount(self, discount_value):
-    if isinstance(discount_value, (int, float)) and discount_value >= 0 and discount_value <= 100:
+    if isinstance(discount_value, (int)) and discount_value >= 0 and discount_value <= 100:
       self._discount = discount_value
     else:
       print("Not valid discount")
@@ -23,7 +23,8 @@ class CashRegister:
   def add_item(self, item, price, quantity=1):
     total_price = price * quantity
     self.total = self.total + total_price
-    self.items.append(item)
+    for _ in range(quantity):
+      self.items.append(item)
 
     transaction_dictionary = {
       "item": item,
@@ -33,7 +34,7 @@ class CashRegister:
     self.previous_transactions.append(transaction_dictionary)
 
   def apply_discount(self):
-    if len(self.previous_transactions) < 1:
+    if len(self.previous_transactions) == 0 or self.discount == 0:
       print("There is no discount to apply.")
       return
     else:
@@ -53,24 +54,25 @@ class CashRegister:
       if last_transaction['item'] in self.items:
         self.items.remove(last_transaction['item'])
 
-    return final_amount
-  
+      self.total = final_amount
+      print(f'After the discount, the total comes to ${self.total:.0f}.')
+    
   def void_last_transaction(self):
     if len(self.previous_transactions) > 1:
-      self.previous_transactions.pop()
-
       # Ensuring that price(total) and items reflect correctly.
       last_index = len(self.previous_transactions) - 1
       last_transaction = self.previous_transactions[last_index]
       last_price = last_transaction['price']
+      transaction_quantity = last_transaction['quantity']
 
       #Adjusting the total
-      self.total = self.total - last_price
+      self.total = self.total - (last_price * transaction_quantity)
 
       #Adjusting the items array
       if last_transaction['item'] in self.items:
         self.items.remove(last_transaction['item'])
-    else:
+      
+      self.previous_transactions.pop()
+    elif len(self.previous_transactions) == 0:
       print("There is no transaction to void.")
   
-

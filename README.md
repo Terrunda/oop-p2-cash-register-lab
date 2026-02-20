@@ -115,7 +115,7 @@ Before you submit your solution, you need to save your progress with git.
 
 ## Documentation
 ### Image of the `CashRegister` class.
-![alt-text](cash_register_image.png)
+![alt-text](code.png)
 
 ## Submission and Grading Criteria
 
