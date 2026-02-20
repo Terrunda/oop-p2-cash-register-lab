@@ -20,7 +20,7 @@ class CashRegister:
       print("Not valid discount")
 
   # Methods
-  def add_item(self, item, price, quantity):
+  def add_item(self, item, price, quantity=1):
     total_price = price * quantity
     self.total = self.total + total_price
     self.items.append(item)
@@ -33,28 +33,26 @@ class CashRegister:
     self.previous_transactions.append(transaction_dictionary)
 
   def apply_discount(self):
-    discount_value = (self.discount / 100) * self.total
-
-    final_amount = self.total - discount_value
-
-    # Ensuring that price(total) and items reflect correctly.
-    last_index = len(self.previous_transactions) - 1
-    last_transaction = self.previous_transactions[last_index]
-    last_price = last_transaction['price']
-
-    #Adjusting the total
-    self.total = self.total - last_price
-
-    #Adjusting the items array
-    if last_transaction['item'] in self.items:
-      self.items.remove(last_transaction['item'])
-
-
-    if len(self.previous_transactions) >= 1:
-      self.previous_transactions.pop()
-    else:
+    if len(self.previous_transactions) < 1:
       print("There is no discount to apply.")
-    
+      return
+    else:
+      discount_value = (self.discount / 100) * self.total
+
+      final_amount = self.total - discount_value
+
+      # Ensuring that price(total) and items reflect correctly.
+      last_index = len(self.previous_transactions) - 1
+      last_transaction = self.previous_transactions[last_index]
+      last_price = last_transaction['price']
+
+      #Adjusting the total
+      self.total = self.total - last_price
+
+      #Adjusting the items array
+      if last_transaction['item'] in self.items:
+        self.items.remove(last_transaction['item'])
+
     return final_amount
   
   def void_last_transaction(self):
